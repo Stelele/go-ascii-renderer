@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"time"
 )
 
@@ -26,53 +25,43 @@ func main() {
 	for {
 		hideCursor()
 		resetCursor()
-		update(test)
+		preProcessFrame(A, B)
+		update(donut)
 		time.Sleep(16 * time.Millisecond)
 		f += 1
 		t += dt
+		A += 0.03
+		B += 0.01
 	}
 }
 
-func test(x int, y int) string {
-	u0 := 2*(float64(x)/float64(width)) - 1
-	v0 := 2*(float64(y)/float64(height)) - 1
-
-	u := 2*(u0-math.Floor(u0)) - 1
-	v := 2*(v0-math.Floor(v0)) - 1
-
-	d := math.Sqrt(u*u + v*v)
-
-	d = math.Sin(d*8+t*0.8) / 8
-	d = math.Abs(d)
-
-	if d < 0.01 {
-		return " "
-	}
-	if d < 0.05 {
-		return "."
-	}
-	if d < 0.1 {
-		return ","
-	}
-
-	if d < 0.4 {
-		return "o"
-	}
-
-	return "#"
-}
-
-func update(up func(int, int) string) {
+func update(up func(int, int) float64) {
 	output := ""
 
 	for y := range height {
 		for x := range width {
-			output += up(x, y)
+			output += getBrightnessChar(up(x, y))
 		}
 		output += "\n"
 	}
 
 	fmt.Println(output)
+}
+
+func getBrightnessChar(val float64) string {
+	chars := []string{" ", ".", ",", "-", "~", ":", ";", "=", "!", "*", "#", "$", "@"}
+	div := 1. / float64(len(chars))
+
+	index := int(val / div)
+
+	if index < 1 {
+		return chars[0]
+	}
+	if index >= len(chars)-1 {
+		return chars[len(chars)-1]
+	}
+
+	return chars[index]
 }
 
 func clearScreen() {
