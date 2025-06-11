@@ -25,7 +25,7 @@ func main() {
 	for {
 		hideCursor()
 		resetCursor()
-		preProcessFrame(A, B)
+		preProcessAnyFrame()
 		update(donut)
 		time.Sleep(16 * time.Millisecond)
 		f += 1
