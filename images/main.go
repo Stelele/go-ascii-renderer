@@ -3,15 +3,13 @@ package main
 import (
 	"fmt"
 	"log"
-	"time"
 )
 
 func main() {
 	clearScreen()
-	i := 0
 
-	for {
-		width, height, err := getTerminalSize()
+	for i := range 9 {
+		_, _, err := getTerminalSize()
 		if err != nil {
 			log.Fatal("Failed to fetch terminal dimensions", err)
 			return
@@ -21,28 +19,12 @@ func main() {
 		resetCursor()
 
 		imgLoc := fmt.Sprintf("photos/gophers-%d.jpeg", i)
-		printImage(imgLoc, width, height)
+		outImgloc := fmt.Sprintf("photos/out/gophers-%d.png", i)
+		saveImage(imgLoc, outImgloc, 192, 108)
+		// printImage(imgLoc, width, height)
 
-		i = (i + 1) % 5
-		time.Sleep(5 * time.Second)
+		// time.Sleep(5 * time.Second)
 	}
-}
-
-func printImage(imgLoc string, width int, height int) {
-	img, err := getImage(imgLoc, width, height)
-	if err != nil {
-		log.Fatal("Failed to get image: ", err)
-	}
-
-	output := ""
-	for y := range height {
-		for x := range width {
-			output += getBrightnessChar(img[y*width+x])
-		}
-		output += "\n"
-	}
-
-	fmt.Println(output)
 }
 
 func getBrightnessChar(val float64) string {
