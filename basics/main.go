@@ -15,14 +15,14 @@ var (
 
 func main() {
 	var err error
-	width, height, err = getTerminalSize()
-	if err != nil {
-		fmt.Println("Couldn't get terminal dimensions")
-		return
-	}
 
 	clearScreen()
 	for {
+		width, height, err = getTerminalSize()
+		if err != nil {
+			fmt.Println("Couldn't get terminal dimensions")
+			return
+		}
 		hideCursor()
 		resetCursor()
 		preProcessAnyFrame()
