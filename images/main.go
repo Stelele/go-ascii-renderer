@@ -3,19 +3,32 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 )
 
 func main() {
-	width, height, err := getTerminalSize()
-	if err != nil {
-		log.Fatal("Failed to fetch terminal dimensions", err)
-		return
-	}
-
 	clearScreen()
-	hideCursor()
+	i := 0
 
-	imgLoc := "photos/gophers.jpeg"
+	for {
+		width, height, err := getTerminalSize()
+		if err != nil {
+			log.Fatal("Failed to fetch terminal dimensions", err)
+			return
+		}
+
+		hideCursor()
+		resetCursor()
+
+		imgLoc := fmt.Sprintf("photos/gophers-%d.jpeg", i)
+		printImage(imgLoc, width, height)
+
+		i = (i + 1) % 5
+		time.Sleep(5 * time.Second)
+	}
+}
+
+func printImage(imgLoc string, width int, height int) {
 	img, err := getImage(imgLoc, width, height)
 	if err != nil {
 		log.Fatal("Failed to get image: ", err)
