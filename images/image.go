@@ -13,7 +13,7 @@ import (
 
 	"github.com/nfnt/resize"
 	"golang.org/x/image/font"
-	"golang.org/x/image/font/basicfont"
+	"golang.org/x/image/font/opentype"
 	"golang.org/x/image/math/fixed"
 )
 
@@ -79,15 +79,21 @@ func saveImage(imgLoc string, outImgLoc string, width int, height int) {
 		output = append(output, line)
 	}
 
-	charWidth, charHeight := 8, 13
-	imgWidth := len(output[0]) * charWidth
-	imgHeight := len(output) * charHeight
+	face, err := getFont()
+	if err != nil {
+		log.Fatal("Failed to get font: ", err)
+	}
+
+	advance, _ := face.GlyphAdvance(' ')
+	charWidth := advance.Ceil()
+	charHeight := (face.Metrics().Ascent + face.Metrics().Descent).Ceil()
+	imgWidth := width * charWidth
+	imgHeight := height * charHeight
 
 	outImg := image.NewRGBA(image.Rect(0, 0, imgWidth, imgHeight))
 
 	draw.Draw(outImg, outImg.Bounds(), &image.Uniform{color.Black}, image.Point{}, draw.Src)
 
-	face := basicfont.Face7x13
 	d := font.Drawer{
 		Dst:  outImg,
 		Src:  image.NewUniform(color.White),
@@ -111,4 +117,25 @@ func saveImage(imgLoc string, outImgLoc string, width int, height int) {
 	}
 
 	fmt.Printf("Saved image to %s\n", outImgLoc)
+}
+
+func getFont() (font.Face, error) {
+	fontName := "photos/Ac437_IBM_EGA_8x8.ttf"
+
+	fontData, err := os.ReadFile(fontName)
+	if err != nil {
+		return nil, err
+	}
+
+	ft, err := opentype.Parse(fontData)
+	if err != nil {
+		return nil, err
+	}
+
+	face, err := opentype.NewFace(ft, &opentype.FaceOptions{
+		Size: 8,
+		DPI:  72,
+	})
+
+	return face, err
 }

@@ -3,13 +3,14 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 )
 
 func main() {
 	clearScreen()
 
-	for i := range 9 {
-		_, _, err := getTerminalSize()
+	for i := range 5 {
+		width, height, err := getTerminalSize()
 		if err != nil {
 			log.Fatal("Failed to fetch terminal dimensions", err)
 			return
@@ -20,10 +21,11 @@ func main() {
 
 		imgLoc := fmt.Sprintf("photos/gophers-%d.jpeg", i)
 		outImgloc := fmt.Sprintf("photos/out/gophers-%d.png", i)
-		saveImage(imgLoc, outImgloc, 192, 108)
-		// printImage(imgLoc, width, height)
 
-		// time.Sleep(5 * time.Second)
+		printImage(imgLoc, width, height)
+		saveImage(imgLoc, outImgloc, 240, 135)
+
+		time.Sleep(time.Second)
 	}
 }
 
