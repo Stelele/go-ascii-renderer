@@ -17,7 +17,8 @@ func main() {
 		}
 
 		hideCursor()
-		resetCursor()
+		clearScreen()
+		// resetCursor()
 
 		imgLoc := fmt.Sprintf("photos/gophers-%d.jpeg", i)
 		outImgloc := fmt.Sprintf("photos/out/gophers-%d.png", i)
@@ -29,7 +30,7 @@ func main() {
 	}
 }
 
-func getBrightnessChar(val float64) string {
+func getBrightnessChar(val float64, grad Grad) string {
 	chars := []string{" ", ".", ",", "-", "~", ":", ";", "=", "!", "*", "#", "$", "@"}
 	div := 1. / float64(len(chars))
 

@@ -3,9 +3,12 @@ module go-photos
 go 1.23.4
 
 require (
-	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
-	golang.org/x/image v0.28.0 // indirect
+	github.com/disintegration/imaging v1.6.2
+	golang.org/x/image v0.28.0
+	golang.org/x/term v0.32.0
+)
+
+require (
 	golang.org/x/sys v0.33.0 // indirect
-	golang.org/x/term v0.32.0 // indirect
 	golang.org/x/text v0.26.0 // indirect
 )
