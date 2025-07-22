@@ -2,11 +2,14 @@ package main
 
 import (
 	"fmt"
+	"io/fs"
 	"log"
+	"os"
 	"time"
 )
 
 func main() {
+	checkIfFolderExistsAndCreate("photos/out")
 	clearScreen()
 
 	for i := range 5 {
@@ -29,30 +32,11 @@ func main() {
 	}
 }
 
-func getBrightnessChar(val float64) string {
-	chars := []string{" ", ".", ",", "-", "~", ":", ";", "=", "!", "*", "#", "$", "@"}
-	div := 1. / float64(len(chars))
-
-	index := int(val / div)
-
-	if index < 1 {
-		return chars[0]
+func checkIfFolderExistsAndCreate(path string) {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		err := os.MkdirAll(path, fs.ModeDir)
+		if err != nil {
+			log.Fatal("Failed to create directory", err)
+		}
 	}
-	if index >= len(chars)-1 {
-		return chars[len(chars)-1]
-	}
-
-	return chars[index]
-}
-
-func clearScreen() {
-	fmt.Print("\x1b[2J\x1b[H")
-}
-
-func resetCursor() {
-	fmt.Print("\x1b[H")
-}
-
-func hideCursor() {
-	fmt.Print("\033[?25l")
 }
